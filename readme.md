@@ -4,6 +4,14 @@ Using this package it is easy to use default route registration similar to what 
 
 ## **Note:** This package is under active development
 
+## Install
+
+Change to your project directory and run the following command in your favourite terminal:
+
+```bash
+npm install adonis-cote-router
+```
+
 ## Usage:
 
 To use package discovery `AdonisJS` requires some configuration.
