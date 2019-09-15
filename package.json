@@ -1,21 +1,17 @@
 {
-  "name": "adonis-cote-route",
-  "version": "0.0.1",
+  "name": "adonis-cote-router",
+  "version": "0.0.3",
   "description": "AdonisJS Framework compitable route management system for cote microservice discovery",
   "main": "index.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/maksbd19/adonisjs-cote-router.git"
   },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "keywords": [
     "adonisjs",
     "cote",
     "route",
-    "cote",
-    "route"
+    "cote route"
   ],
   "author": "Mahbub Alam <makjoybd@gmail.com>",
   "license": "ISC"
