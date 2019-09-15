@@ -257,10 +257,10 @@ class Router {
    * callback function. They can have shared middlewares.
    *
    * @param {function} fn
-   * @param {RouteGroup} routeGroup a group of routes
+   * @param {RouteGroup} group a group of routes
    */
-  static group(fn, routeGroup) {
-    routeGroup = routeGroup || new RouteGroup();
+  static group(fn, group) {
+    const routeGroup = group instanceof RouteGroup ? group : new RouteGroup();
     Router_group = routeGroup;
 
     this.break();

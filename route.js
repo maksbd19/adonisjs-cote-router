@@ -8,28 +8,15 @@ class Route {
   /**
    * Create a new route instance
    *
-   * @param {string} prefix route path prefix
    * @param {string} namespace route namespace
    * @param {string} path route path
    * @param {string} handler route handler in {Controller}.{Mehtod} format
    */
-  constructor(prefix, namespace, path, handler) {
-    this._prefix = prefix;
+  constructor(namespace, path, handler) {
     this._namespace = namespace;
     this._path = path;
     this._handler = handler;
     this._middlewares = [];
-  }
-
-  /**
-   * Update route prefix
-   *
-   * @param {string} prefix
-   *
-   * @returns void
-   */
-  updatePrefix(prefix) {
-    this._prefix = prefix;
   }
 
   /**
@@ -83,7 +70,8 @@ class Route {
    * @returns {string} route path
    */
   get path() {
-    return [this._prefix, this._namespace, this._path].join("/");
+    const path = `${this._namespace}/${this._path}`;
+    return path.replace(new RegExp(/\/+/, "g"), "/");
   }
 
   /**
@@ -128,10 +116,6 @@ class Route {
    * @returns {Route} route
    */
   updateProps(props) {
-    if (props.prefix) {
-      this.updatePrefix(props.prefix);
-    }
-
     if (props.namespace) {
       this.updateNamespace(props.namespace);
     }
@@ -151,10 +135,6 @@ class Route {
    * @returns {Route} route
    */
   updateGroupProps(group) {
-    if (group.prefix) {
-      this.updatePrefix(group.prefix);
-    }
-
     if (group.namespace) {
       this.updateNamespace(group.namespace);
     }

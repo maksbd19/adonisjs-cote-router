@@ -6,8 +6,6 @@
 
 class RouteGroup {
   constructor(namespace) {
-    this._prefix = "";
-    this._namespace = "";
     this._routes = [];
     this._middlewares = [];
     this._separator = "/";
@@ -15,11 +13,11 @@ class RouteGroup {
   }
 
   /**
-   * Set separator of the namespace/prefix etc
+   * Set separator of the namespace
    *
    * @returns void
    */
-  set setparator(separator) {
+  set separator(separator) {
     this._separator = separator;
   }
 
@@ -32,15 +30,6 @@ class RouteGroup {
    */
   add(route) {
     this._routes.push(route);
-  }
-
-  /**
-   * get prefix of this group
-   *
-   * @returns {string} prefix
-   */
-  get prefix() {
-    return this._prefix;
   }
 
   /**
@@ -62,11 +51,11 @@ class RouteGroup {
   }
 
   /**
-   * get setparator of this group
+   * get separator of this group
    *
-   * @returns {string} setparator
+   * @returns {string} separator
    */
-  get setparator() {
+  get separator() {
     return this._separator;
   }
 
@@ -95,24 +84,18 @@ class RouteGroup {
     const routes = [];
 
     if (props) {
-      const prefix = [props.prefix, this.prefix]
-        .filter(i => !!i)
-        .join(this.setparator);
-
       const namespace = [props.namespace, this.namespace]
         .filter(i => !!i)
-        .join(this.setparator);
+        .join(this.separator);
 
       const middlewares = props.middlewares
         .concat(this._middlewares)
         .filter((value, index, self) => self.indexOf(value) === index);
 
-      props.prefix = prefix;
       props.namespace = namespace;
       props.middlewares = middlewares;
     } else {
       props = {
-        prefix: this.prefix,
         namespace: this.namespace,
         middlewares: this._middlewares
       };
