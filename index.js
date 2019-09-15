@@ -228,7 +228,7 @@ class Router {
       namespace = Router_group.namespace;
     }
 
-    const route = new Route(Router_app, namespace, path, handler);
+    const route = new Route(namespace, path, handler);
 
     Router_routes.push(route);
 
@@ -244,8 +244,8 @@ class Router {
    *
    * @returns {Route} route
    */
-  static any(namespace, path, handler) {
-    const route = new Route(Router_app, namespace, path, handler);
+  static any(path, handler) {
+    const route = new Route(null, path, handler);
 
     Router_routes.push(route);
 
@@ -263,7 +263,7 @@ class Router {
     const routeGroup = group instanceof RouteGroup ? group : new RouteGroup();
     Router_group = routeGroup;
 
-    this.break();
+    this._break();
     fn();
 
     const routes = this._flushBrokenRoutes();
@@ -306,6 +306,10 @@ class Router {
     });
 
     return routes;
+  }
+
+  static routes() {
+    return this._flattenRotues();
   }
 
   /**
