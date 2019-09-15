@@ -1,6 +1,6 @@
 {
   "name": "adonis-cote-router",
-  "version": "0.0.3",
+  "version": "0.0.1",
   "description": "AdonisJS Framework compitable route management system for cote microservice discovery",
   "main": "index.js",
   "repository": {
