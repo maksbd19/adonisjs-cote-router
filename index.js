@@ -228,7 +228,7 @@ class Router {
       namespace = Router_group.namespace;
     }
 
-    const route = new Route(namespace, path, handler);
+    const route = new Route(Router_app, namespace, path, handler);
 
     Router_routes.push(route);
 
@@ -245,7 +245,7 @@ class Router {
    * @returns {Route} route
    */
   static any(path, handler) {
-    const route = new Route(null, path, handler);
+    const route = new Route(Router_app, null, path, handler);
 
     Router_routes.push(route);
 
@@ -338,51 +338,54 @@ class Router {
     routes.forEach(route => {
       const path = route.path;
       const handler = route.handler;
-      const middlewares = route.middlewares
-        .map(fn => {
-          try {
-            const resolvedMiddleware = middlewareResolver.resolveFunc(
-              `${fn}.handle`
-            );
-            return resolvedMiddleware["method"];
-          } catch (e) {
-            log.error(e);
-            return null;
-          }
-        })
-        .filter(el => el !== null);
+      const middlewares = (() => {
+        let middlewares = route.middlewares
+          .map(fn => {
+            try {
+              const resolvedMiddleware = middlewareResolver.resolveFunc(
+                `${fn}.handle`
+              );
+              return resolvedMiddleware["method"];
+            } catch (e) {
+              log.error(e);
+              return null;
+            }
+          })
+          .filter(el => el !== null);
+
+        return middlewares && middlewares.length > 0 ? middlewares : [];
+      })();
 
       const resolver = methodResolver.resolveFunc(handler);
 
       Router_client.on(path, (req, callback) => {
         try {
-          const processMiddleware = (args, _callback) => {
-            if (middlewares.length === 0) {
+          const processMiddleware = (i, args, _callback) => {
+            if (middlewares.length === i) {
               return _callback(null, args);
             }
 
-            const middleware = middlewares.shift();
+            const middleware = middlewares[i];
 
-            middleware(args, resp => {
-              if (resp instanceof Error) {
-                return callaback(resp);
+            middleware(args, (err, resp) => {
+              if (err) {
+                return callback(err);
               }
-              processMiddleware(resp, _callback);
+              processMiddleware(++i, resp, _callback);
             });
           };
 
-          if (!middlewares || middlewares.length) {
-            middlewares = [];
-          }
-
-          processMiddleware(req, (err, resp) => {
+          processMiddleware(0, req, async (err, resp) => {
             if (err) {
               return callback(err);
             }
 
-            resolver.method(_req, (err2, result) => {
-              return callback(err2, result);
-            });
+            try {
+              const result = await resolver.method(resp);
+              return callback(null, result);
+            } catch (e) {
+              return callback(e);
+            }
           });
         } catch (e) {
           return callback(e);

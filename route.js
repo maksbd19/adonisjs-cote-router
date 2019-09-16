@@ -8,11 +8,13 @@ class Route {
   /**
    * Create a new route instance
    *
+   * @param {string} app application namespace
    * @param {string} namespace route namespace
    * @param {string} path route path
    * @param {string} handler route handler in {Controller}.{Mehtod} format
    */
-  constructor(namespace, path, handler) {
+  constructor(app, namespace, path, handler) {
+    this._app = app;
     this._namespace = namespace;
     this._path = path;
     this._handler = handler;
@@ -70,7 +72,7 @@ class Route {
    * @returns {string} route path
    */
   get path() {
-    const path = `${this._namespace}/${this._path}`;
+    const path = `${this._app}/${this._namespace}/${this._path}`;
     return path.replace(new RegExp(/\/+/, "g"), "/");
   }
 
