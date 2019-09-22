@@ -347,8 +347,7 @@ class Router {
               );
               return resolvedMiddleware["method"];
             } catch (e) {
-              log.error(e);
-              return null;
+              throw e;
             }
           })
           .filter(el => el !== null);
